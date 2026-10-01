@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-ground: #f5f5f7;
+  --color-border: #e3e6ec;
+  --color-muted: #69727d;
+  --color-faint: #9aa1ab;
+  --color-track: #d9dde5;
+  --color-poor: #c9ced6;
+  --color-ink: #0c1521;
+  --color-navy: #15295a;
+  --color-blue: #0036f3;
+  --color-blue-soft: #eaeffe;
+  --color-green: #75ff6f;
+  --color-green-soft: #e9ffe7;
+  --color-green-line: #9be894;
+  --color-amber: #f5b400;
+  --color-amber-soft: #fff4d6;
+  --color-red: #c8321e;
+  --color-red-soft: #fce9e6;
+
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 44px;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.06em;
+  --tracking-label: 0.08em;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --container-rail: 416px;
+}
+
+@layer base {
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-synthesis: none;
+  }
+  input,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+  input:focus-visible,
+  select:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 1px;
+  }
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 20px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    var(--color-blue),
+    var(--color-blue)
+  ) 0 / var(--fill, 0%) 100% no-repeat,
+  var(--color-track);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  border-radius: 999px;
+  background: var(--color-white);
+  border: 2px solid var(--color-blue);
+  box-shadow: 0 2px 6px #0c152138;
+  cursor: grab;
+}
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-track);
+}
+input[type="range"]::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-blue);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-white);
+  border: 2px solid var(--color-blue);
+}
+
+@utility label-caps {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* iOS zooms the page when a focused field is under 16px. */
+@media (max-width: 767px) {
+  input,
+  select {
+    font-size: 16px !important;
+  }
+}

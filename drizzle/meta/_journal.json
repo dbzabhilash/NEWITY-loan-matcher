@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1790744303291,
+      "tag": "0000_aromatic_charles_xavier",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790751028271,
+      "tag": "0001_striped_thunderball",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790753605812,
+      "tag": "0002_demo_passwords",
+      "breakpoints": true
+    }
+  ]
+}

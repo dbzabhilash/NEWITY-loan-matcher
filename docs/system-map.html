@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Newity Loan Matcher — System Map</title>
+<style>
+  @page { size: Letter; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font: 11pt/1.5 Inter, -apple-system, "Helvetica Neue", Arial, sans-serif; color: #0C1521; margin: 0; }
+  h1 { font-size: 22pt; margin: 0 0 4px; letter-spacing: -0.02em; }
+  h2 { font-size: 14pt; margin: 22px 0 8px; border-bottom: 1px solid #D9DEE5; padding-bottom: 4px; }
+  h3 { font-size: 11.5pt; margin: 14px 0 4px; }
+  p, li { margin: 0 0 6px; }
+  ul { padding-left: 18px; margin: 0 0 8px; }
+  code { font: 9.5pt ui-monospace, Menlo, monospace; background: #F2F4F7; padding: 1px 4px; border-radius: 3px; }
+  .muted { color: #5B6570; }
+  .brand { color: #1F4FD1; font-weight: 800; letter-spacing: 0.08em; font-size: 12pt; }
+  table { border-collapse: collapse; width: 100%; font-size: 10pt; margin: 6px 0 10px; }
+  th, td { border: 1px solid #D9DEE5; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #F2F4F7; font-weight: 600; }
+  .page { page-break-before: always; }
+  .fig { text-align: center; margin: 0; page-break-before: always; page-break-inside: avoid; }
+  .fig svg { width: auto; height: 218mm; max-width: 100%; }
+  .cap { font-size: 9.5pt; color: #5B6570; text-align: center; margin-top: 6px; }
+  .legend { display: flex; gap: 14px; justify-content: center; font-size: 9.5pt; margin-top: 6px; flex-wrap: wrap; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; border: 0.5px solid #888; }
+  .l-gray::before { background: #F1EFE8; border-color: #5F5E5A !important; }
+  .l-purple::before { background: #EEEDFE; border-color: #534AB7 !important; }
+  .l-teal::before { background: #E1F5EE; border-color: #0F6E56 !important; }
+  .l-coral::before { background: #FAECE7; border-color: #993C1D !important; }
+  .l-amber::before { background: #FAEEDA; border-color: #854F0B !important; }
+  /* SVG text */
+  .th { font: 500 13px Inter, -apple-system, Arial, sans-serif; }
+  .ts { font: 400 11px Inter, -apple-system, Arial, sans-serif; }
+  .arr { stroke: #5F5E5A; stroke-width: 1.2; fill: none; }
+  .g rect { fill: #F1EFE8; stroke: #5F5E5A; } .g .th { fill: #2C2C2A; } .g .ts { fill: #5F5E5A; }
+  .pu rect { fill: #EEEDFE; stroke: #534AB7; } .pu .th { fill: #26215C; } .pu .ts { fill: #534AB7; }
+  .te rect { fill: #E1F5EE; stroke: #0F6E56; } .te .th { fill: #04342C; } .te .ts { fill: #0F6E56; }
+  .co rect { fill: #FAECE7; stroke: #993C1D; } .co .th { fill: #4A1B0C; } .co .ts { fill: #993C1D; }
+  .am rect { fill: #FAEEDA; stroke: #854F0B; } .am .th { fill: #412402; } .am .ts { fill: #854F0B; }
+  .outer rect { fill-opacity: 0.45; }
+</style>
+</head>
+<body>
+
+<div class="brand">NEWITY</div>
+<h1>Loan Matcher — System Map</h1>
+<p class="muted">How the data, APIs, frontends and login roles connect. Traced from source on 2026-10-01. Companion to <code>context.md</code> (the <em>why</em>) and <code>README.md</code> (the <em>how to run</em>).</p>
+
+<h2>1. What the tool is</h2>
+<p>A sales-rep screen used live on a phone call. The rep fills a short intake rail; 49 SBA lender programs re-rank on every keystroke as <b>strong / potential / poor / ineligible</b>. The rep can open a program (talk track, why-it-fits, watch items, rep-only thresholds), compare up to four side by side, and model affordability with a payment slider. Output to the customer is an email <em>draft</em> (<code>mailto:</code>), never an application. Each send is logged so sales managers can see what gets recommended and compared.</p>
+
+<h2>2. The map</h2>
+<p>Figure 1 on the next page shows every moving part and how it is wired. Read top to bottom: sources, boot, SQLite, the Next.js server (pages and APIs), the two browsers by login role, and what leaves the app. Double-headed arrows mean read and write.</p>
+<div class="fig">
+<svg viewBox="0 0 680 1056" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Newity Loan Matcher system map</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<g class="g"><rect x="40" y="40" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="140" y="58" text-anchor="middle">data/lenders.csv</text><text class="ts" x="140" y="74" text-anchor="middle">49 rows · 15 lenders · 5 types</text></g>
+<g class="g"><rect x="440" y="40" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="540" y="58" text-anchor="middle">drizzle/0000–0002.sql</text><text class="ts" x="540" y="74" text-anchor="middle">tables + 10 seeded users</text></g>
+
+<g class="g"><rect x="40" y="120" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="140" y="138" text-anchor="middle">instrumentation → ingest</text><text class="ts" x="140" y="154" text-anchor="middle">sha256 → new snapshot or skip</text></g>
+<g class="g"><rect x="440" y="120" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="540" y="138" text-anchor="middle">db/client.ts</text><text class="ts" x="540" y="154" text-anchor="middle">SQLite WAL · migrate() on open</text></g>
+
+<line x1="140" y1="84" x2="140" y2="118" class="arr" marker-end="url(#arrow)"/>
+<line x1="540" y1="84" x2="540" y2="118" class="arr" marker-end="url(#arrow)"/>
+<line x1="140" y1="164" x2="140" y2="198" class="arr" marker-end="url(#arrow)"/>
+<line x1="540" y1="164" x2="540" y2="198" class="arr" marker-end="url(#arrow)"/>
+
+<g class="g outer"><rect x="40" y="200" width="600" height="172" rx="20" stroke-width="0.5"/><text class="th" x="60" y="226">SQLite · data/app.db</text></g>
+<g class="g"><rect x="60" y="240" width="176" height="116" rx="12" stroke-width="0.5"/>
+<text class="th" x="148" y="262" text-anchor="middle">Rate sheet</text>
+<text class="ts" x="148" y="280" text-anchor="middle">snapshots · sha256 hash</text>
+<text class="ts" x="148" y="296" text-anchor="middle">lenders · program_types</text>
+<text class="ts" x="148" y="312" text-anchor="middle">business_types</text>
+<text class="ts" x="148" y="328" text-anchor="middle">special_req · rule_key</text>
+<text class="ts" x="148" y="344" text-anchor="middle">lender_programs · FKs</text></g>
+<g class="g"><rect x="248" y="240" width="176" height="116" rx="12" stroke-width="0.5"/>
+<text class="th" x="336" y="262" text-anchor="middle">Logins</text>
+<text class="ts" x="336" y="280" text-anchor="middle">users · sdr | manager</text>
+<text class="ts" x="336" y="296" text-anchor="middle">password plain text</text>
+<text class="ts" x="336" y="312" text-anchor="middle">sessions · 30-day token</text>
+<text class="ts" x="336" y="328" text-anchor="middle">token = cookie value</text></g>
+<g class="g"><rect x="436" y="240" width="184" height="116" rx="12" stroke-width="0.5"/>
+<text class="th" x="528" y="262" text-anchor="middle">Traction log</text>
+<text class="ts" x="528" y="280" text-anchor="middle">recommendations</text>
+<text class="ts" x="528" y="296" text-anchor="middle">kind · customer · sentAt</text>
+<text class="ts" x="528" y="312" text-anchor="middle">recommendation_programs</text>
+<text class="ts" x="528" y="328" text-anchor="middle">→ lender_programs</text>
+<text class="ts" x="528" y="344" text-anchor="middle">pairs = self-join</text></g>
+
+<line x1="340" y1="372" x2="340" y2="410" class="arr" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+
+<g class="pu outer"><rect x="40" y="412" width="600" height="200" rx="20" stroke-width="0.5"/><text class="th" x="60" y="438">Next.js server · src/app</text></g>
+<g class="pu"><rect x="60" y="452" width="176" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="148" y="472" text-anchor="middle">/login</text>
+<text class="ts" x="148" y="488" text-anchor="middle">form · POST /api/login</text>
+<text class="ts" x="148" y="504" text-anchor="middle">role → / or /manager</text></g>
+<g class="pu"><rect x="248" y="452" width="176" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="336" y="472" text-anchor="middle">/  (SDR)</text>
+<text class="ts" x="336" y="488" text-anchor="middle">no cookie → /login</text>
+<text class="ts" x="336" y="504" text-anchor="middle">loadPrograms → &lt;App&gt;</text></g>
+<g class="pu"><rect x="436" y="452" width="184" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="528" y="472" text-anchor="middle">/manager</text>
+<text class="ts" x="528" y="488" text-anchor="middle">non-manager → /</text>
+<text class="ts" x="528" y="504" text-anchor="middle">&lt;ManagerApp&gt; + snapshot</text></g>
+
+<g class="pu"><rect x="60" y="532" width="104" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="112" y="552" text-anchor="middle">POST login</text>
+<text class="ts" x="112" y="568" text-anchor="middle">sets cookie</text>
+<text class="ts" x="112" y="584" text-anchor="middle">401 on miss</text></g>
+<g class="pu"><rect x="174" y="532" width="104" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="226" y="552" text-anchor="middle">POST logout</text>
+<text class="ts" x="226" y="568" text-anchor="middle">deletes row</text>
+<text class="ts" x="226" y="584" text-anchor="middle">clears cookie</text></g>
+<g class="pu"><rect x="288" y="532" width="104" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="552" text-anchor="middle">GET programs</text>
+<text class="ts" x="340" y="568" text-anchor="middle">ETag = hash</text>
+<text class="ts" x="340" y="584" text-anchor="middle">no UI caller</text></g>
+<g class="pu"><rect x="402" y="532" width="104" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="454" y="552" text-anchor="middle">POST recs</text>
+<text class="ts" x="454" y="568" text-anchor="middle">cookie → 201</text>
+<text class="ts" x="454" y="584" text-anchor="middle">401 · 400</text></g>
+<g class="pu"><rect x="516" y="532" width="104" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="568" y="552" text-anchor="middle">GET traction</text>
+<text class="ts" x="568" y="568" text-anchor="middle">manager only</text>
+<text class="ts" x="568" y="584" text-anchor="middle">401 · 403</text></g>
+
+<line x1="230" y1="612" x2="230" y2="650" class="arr" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<line x1="540" y1="612" x2="540" y2="650" class="arr" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+
+<g class="te outer"><rect x="40" y="652" width="380" height="300" rx="20" stroke-width="0.5"/><text class="th" x="60" y="678">SDR browser · &lt;App&gt;</text></g>
+<g class="te"><rect x="60" y="692" width="340" height="48" rx="8" stroke-width="0.5"/>
+<text class="th" x="230" y="712" text-anchor="middle">IntakeRail</text>
+<text class="ts" x="230" y="728" text-anchor="middle">19 fields · useIntake store · Clear</text></g>
+<g class="te"><rect x="60" y="752" width="340" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="230" y="772" text-anchor="middle">useMemo: evaluate() → rank()</text>
+<text class="ts" x="230" y="788" text-anchor="middle">rules.ts · rank.ts · money.ts · copy.ts</text>
+<text class="ts" x="230" y="804" text-anchor="middle">pure TS · zero network per keystroke</text></g>
+<g class="te"><rect x="60" y="828" width="165" height="48" rx="8" stroke-width="0.5"/>
+<text class="th" x="142" y="848" text-anchor="middle">MatchList / Card</text>
+<text class="ts" x="142" y="864" text-anchor="middle">tiers · talk track</text></g>
+<g class="te"><rect x="235" y="828" width="165" height="48" rx="8" stroke-width="0.5"/>
+<text class="th" x="317" y="848" text-anchor="middle">CompareView</text>
+<text class="ts" x="317" y="864" text-anchor="middle">≤4 cols · Affordability</text></g>
+<g class="te"><rect x="60" y="888" width="340" height="48" rx="8" stroke-width="0.5"/>
+<text class="th" x="230" y="908" text-anchor="middle">MailLink</text>
+<text class="ts" x="230" y="924" text-anchor="middle">mailto + clipboard + POST recs (keepalive)</text></g>
+
+<g class="co outer"><rect x="440" y="652" width="200" height="300" rx="20" stroke-width="0.5"/><text class="th" x="460" y="678">Manager browser</text></g>
+<g class="co"><rect x="460" y="692" width="160" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="540" y="712" text-anchor="middle">ManagerApp</text>
+<text class="ts" x="540" y="728" text-anchor="middle">month + rep filters</text>
+<text class="ts" x="540" y="744" text-anchor="middle">fetch /api/traction</text></g>
+<g class="co"><rect x="460" y="768" width="160" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="540" y="788" text-anchor="middle">TractionTable</text>
+<text class="ts" x="540" y="804" text-anchor="middle">ranked bars · row click</text>
+<text class="ts" x="540" y="820" text-anchor="middle">pairs · reps · last sent</text></g>
+<g class="co"><rect x="460" y="844" width="160" height="48" rx="8" stroke-width="0.5"/>
+<text class="th" x="540" y="864" text-anchor="middle">LogoutButton</text>
+<text class="ts" x="540" y="880" text-anchor="middle">POST /api/logout</text></g>
+
+<line x1="125" y1="952" x2="125" y2="990" class="arr" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<line x1="325" y1="952" x2="325" y2="990" class="arr" marker-end="url(#arrow)"/>
+
+<g class="am"><rect x="40" y="992" width="170" height="44" rx="8" stroke-width="0.5"/><text class="th" x="125" y="1010" text-anchor="middle">localStorage</text><text class="ts" x="125" y="1026" text-anchor="middle">newity.intake.v3</text></g>
+<g class="am"><rect x="230" y="992" width="190" height="44" rx="8" stroke-width="0.5"/><text class="th" x="325" y="1010" text-anchor="middle">Customer mail client</text><text class="ts" x="325" y="1026" text-anchor="middle">draft only · never an app</text></g>
+<g class="g"><rect x="440" y="992" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="540" y="1010" text-anchor="middle">vitest</text><text class="ts" x="540" y="1026" text-anchor="middle">money · ingest · auth · recs · traction</text></g>
+</svg>
+<div class="legend"><span class="l-gray">Data &amp; boot</span><span class="l-purple">Server</span><span class="l-teal">SDR client</span><span class="l-coral">Manager client</span><span class="l-amber">Browser-side externals</span></div>
+<p class="cap">Figure 1 — Newity Loan Matcher system map.</p>
+</div>
+
+<h2 class="page">3. Layer by layer</h2>
+
+<h3>Sources → boot</h3>
+<ul>
+<li><code>src/instrumentation.ts</code> runs on server start, calls <code>ingestCsv</code> in <code>src/db/ingest.ts</code>. The CSV is hashed (sha256). Unseen hash → new <code>snapshots</code> row and 49 normalized <code>lender_programs</code> rows inside one transaction. Seen hash → "exists", nothing written. Old snapshots are kept.</li>
+<li>An unknown <code>special_requirements</code> phrase throws with the phrase in the message, so a human maps it to a <code>rule_key</code> in <code>SPECIAL_KEYS</code> before the data is trusted.</li>
+<li><code>src/db/client.ts</code> opens <code>data/app.db</code> lazily on first use (WAL, foreign keys on) and runs the Drizzle migrations. Migration 0001 creates the login and traction tables and seeds 8 SDRs + 2 managers; 0002 sets every password to <code>password</code>.</li>
+<li>Both pages also call ingest inline if a request arrives before boot finished, so the app never serves an empty snapshot.</li>
+</ul>
+
+<h3>SQLite — three table families</h3>
+<table>
+<tr><th>Family</th><th>Tables</th><th>Key semantics</th></tr>
+<tr><td>Rate sheet</td><td><code>snapshots</code>, <code>lenders</code>, <code>program_types</code>, <code>business_types</code>, <code>special_requirements</code>, <code>lender_programs</code></td><td>Fact rows carry <code>snapshot_id</code>; the app serves the latest. <code>max_debt_ratio</code> NULL = no rule listed. <code>business_type_id</code> NULL = All.</td></tr>
+<tr><td>Logins</td><td><code>users</code>, <code>sessions</code></td><td><code>users.role</code> = <code>sdr</code> | <code>manager</code> gates every manager path. <code>sessions.id</code> is a random 32-byte token and is literally the cookie value; 30-day expiry.</td></tr>
+<tr><td>Traction</td><td><code>recommendations</code>, <code>recommendation_programs</code></td><td>One row per email draft opened (<code>kind</code> = proposal | comparison, customer name + email, time). Junction pins the exact <code>lender_programs.id</code>. "Compared with" is a self-join on the junction. Aggregation groups by lender + program type so totals survive re-imports.</td></tr>
+</table>
+
+<h3>Next.js server — pages</h3>
+<ul>
+<li>Every page and API starts the same way: read the <code>session</code> cookie → <code>userFromToken</code> in <code>src/db/auth.ts</code> → decide.</li>
+<li><code>/</code> (SDR app): no user → redirect <code>/login</code>. Loads the full latest snapshot server-side and passes <code>programs</code>, <code>snapshot</code>, <code>user</code> as props to <code>&lt;App&gt;</code>. The browser never fetches programs.</li>
+<li><code>/manager</code>: no user → <code>/login</code>; SDR → <code>/</code>. Renders <code>&lt;ManagerApp&gt;</code> with the snapshot summary only; traction data is fetched client-side.</li>
+<li><code>/login</code>: client form with a hard-coded username list (mirrors the seed). POST → cookie → <code>router.push</code> by role.</li>
+</ul>
+
+<h3>Next.js server — APIs</h3>
+<table>
+<tr><th>Route</th><th>Auth</th><th>Does</th></tr>
+<tr><td><code>POST /api/login</code></td><td>none</td><td>Plain-text compare, inserts session, sets httpOnly / sameSite=lax cookie for 30 days. 401 otherwise.</td></tr>
+<tr><td><code>POST /api/logout</code></td><td>cookie optional</td><td>Deletes the session row, clears the cookie, 204.</td></tr>
+<tr><td><code>GET /api/programs</code></td><td>none</td><td>Latest snapshot as JSON with ETag = file hash, 304 support, 60 s cache. <b>No UI code calls it.</b></td></tr>
+<tr><td><code>POST /api/recommendations</code></td><td>any user</td><td>Validates <code>{kind, customerName, customerEmail, programIds[]}</code>; proposal = exactly 1 id, comparison ≥ 2; ids must exist. 201 with id, else 400 / 401.</td></tr>
+<tr><td><code>GET /api/traction</code></td><td>manager</td><td><code>?from&amp;to&amp;rep</code> (to exclusive). One join query, aggregated in JS: totals, ranked programs, top-3 pairs, top-3 senders, last sent, months with sends, rep list. 401 anonymous, 403 SDR.</td></tr>
+</table>
+
+<h3>SDR browser</h3>
+<ul>
+<li><code>src/components/App.tsx</code> is the hub. <code>useIntake</code> (a tiny <code>useSyncExternalStore</code> over <code>localStorage</code> key <code>newity.intake.v3</code>) gives the intake; <code>programs.map(evaluate).rank(preset)</code> runs in one <code>useMemo</code>. That single <code>ranked</code> array feeds the intake rail (for "Unlocks X" hints), the match list, and the compare view.</li>
+<li>Rules, tiering, best-fit score, amortization and all copy are pure functions in <code>src/lib/</code> (<code>rules.ts</code>, <code>rank.ts</code>, <code>money.ts</code>, <code>copy.ts</code>). Zero network per keystroke.</li>
+<li>Compare set is the rep's <code>pinned</code> ids, limit 4, filtered against <code>ranked</code>; a program that turns ineligible drops out silently. Selecting a column drives the affordability slider.</li>
+<li>The only server write during a call: a <code>MailLink</code> click opens <code>mailto:</code>, copies the same draft to the clipboard, and POSTs to <code>/api/recommendations</code> with <code>keepalive</code>. "Email proposal" logs a proposal; "Send comparison" logs a comparison (one column → proposal).</li>
+</ul>
+
+<h3>Manager browser</h3>
+<ul>
+<li><code>ManagerApp</code> holds month + rep filters, fetches <code>/api/traction</code> on every change, and redirects to <code>/login</code> on a non-OK response. Month defaults to the current month; "All time" is offered.</li>
+<li><code>TractionTable</code> is pure render: ranked bars (compared vs solo width relative to #1), top 8 with "show all", and a row click revealing "Most compared with", "Most recommended by" and "Last sent".</li>
+</ul>
+
+<h3>The loop</h3>
+<p>SDR send → traction tables → manager view. Snapshot date / counts appear in both top bars from the same <code>loadPrograms</code> call. Log out from either role posts to the same endpoint.</p>
+
+<h2>4. Drift found while tracing</h2>
+<table>
+<tr><th>Where</th><th>What</th></tr>
+<tr><td><code>context.md</code></td><td>Says password = username. Migration 0002 and README set every password to <code>password</code>. Doc is stale.</td></tr>
+<tr><td><code>MatchList.tsx</code> SortRow</td><td>Compare helper text says "Top 3 by …" but <code>COMPARE_LIMIT</code> is 4.</td></tr>
+<tr><td><code>/api/programs</code></td><td>Dead endpoint: implemented with ETag caching, never called by the UI. Keep as public contract or delete.</td></tr>
+<tr><td><code>login/page.tsx</code></td><td>Username dropdown is hand-mirrored from the seed. Adding a user in a migration requires editing this file too.</td></tr>
+<tr><td>Design sources</td><td>Paper file "Newity Loan Matcher" is the design source of truth; the <code>.docx</code> in the folder is explicitly not.</td></tr>
+</table>
+
+<h2>5. Review order</h2>
+<ol>
+<li><b>Data</b> — row / lender / type counts vs CSV, null handling, all 10 special phrases map, double boot = one snapshot. <code>ingest.test.ts</code>.</li>
+<li><b>Rules</b> — boundary cases per hard rule and per <code>rule_key</code>; tier precedence (hard fail → soft fail → unknown → strong). <code>money.test.ts</code>.</li>
+<li><b>APIs</b> — curl each with no cookie / SDR / manager; shape validation on recommendations. <code>auth</code>, <code>recommendations</code>, <code>traction</code> tests.</li>
+<li><b>Roles</b> — redirects on <code>/</code> and <code>/manager</code>; landing page by role; cookie flags.</li>
+<li><b>Frontends</b> — type intake → re-rank, open card, compare 3–4, slider, send → row appears in manager view; refresh keeps intake.</li>
+<li><b>Docs</b> — reconcile the drift table above against <code>context.md</code>.</li>
+</ol>
+<p class="muted">Run first: <code>npx vitest run</code> and <code>npx next build</code>.</p>
+
+</body>
+</html>
