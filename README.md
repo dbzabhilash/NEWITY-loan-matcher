@@ -77,3 +77,28 @@ src/components/      intake/, matches/, compare/, manager/, shared UI
 src/db/              schema, client, ingest, auth, recommendations, traction
 src/lib/             pure logic: rules, rank, money, copy, intake, types
 ```
+
+---
+
+## Documents
+
+| document | what it is |
+|---|---|
+| [PRD](docs/Newity_Loan_Matcher_PRD.pdf) | Product requirements. |
+| [QA plan](docs/Newity_Loan_Matcher_QA_Plan.pdf) | Test plan. |
+| [System map (PDF)](docs/system-map.pdf) · [HTML](docs/system-map.html) | Diagram of how the parts fit together. |
+| [context.md](context.md) | Logic and design decisions behind the app. |
+| [Assessment brief](NEWITY_Assessment_B_Lender_Comparison.docx) | The original assignment. |
+
+### AI workflow journal
+
+**Site:** https://newity-ai-workflow.dbzabhilash.chatgpt.site
+
+The site is built from these exported chats:
+
+- [SBA loan exploration](workflow%20chats%20to%20be%20exported/SBA-Loan-Exploration.md)
+- [Architecture](workflow%20chats%20to%20be%20exported/Newity%20Loan%20Matcher%20architecture.md)
+- [Design](workflow%20chats%20to%20be%20exported/Newity%20Loan%20Matcher%20design.md)
+- [Login system and loan product tracking](workflow%20chats%20to%20be%20exported/Login%20system%20and%20loan%20product%20tracking%20(2).md)
+- [Sales manager dashboard](workflow%20chats%20to%20be%20exported/Loan%20Matcher%20sales%20manager%20dashboard.md)
+- [QA plan](workflow%20chats%20to%20be%20exported/Project%20QA%20plan.md)
